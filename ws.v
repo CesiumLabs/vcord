@@ -136,7 +136,7 @@ pub fn (mut channel Channel) from_json(f map[string]json2.Any) {
 			}
 			'last_pin_timestamp' {
 				channel.last_pin_timestamp = time.parse_iso8601(v.str()) or {
-					time.unix(int(snowflake.discord_epoch / 1000))
+					snowflake.parse_timestamp(v.str())
 				}
 			}
 			else {}
