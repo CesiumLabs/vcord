@@ -3,8 +3,27 @@
   </p>
  </br>
  
-<p align="center">
-  Documentation coming soon.
-</p>
+<h1>
+  Example
+  </h1>
+  
+  ```v
+import valkyria as val
+
+
+fn main() {
+    mut c := val.new_client("BOT_TOKEN") or {
+        exit(1)
+    }
+    
+    c.on_ready(on_ready)
+
+    c.login() ?
+}
+
+ fn on_ready(mut c val.Client, r &val.Ready) {
+    println("Ready!")
+}
+```
 
   
