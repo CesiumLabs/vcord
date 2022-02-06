@@ -1,6 +1,5 @@
 module gateway
 
-import x.json2 as json
 import os
 
 pub type Intent = i64
@@ -25,41 +24,7 @@ pub const (
 	direct_message_typing = Intent(1 << 14)
 )
 
-pub struct GatewayPacket {
-mut: 
-    op int
-	d json.Any
-	s int
-	t string
-}
-
-pub struct HelloPacket {
-    mut: heartbeat_interval i64
-}
-
-pub struct HeartbeatPacket {
-	op int
-	d json.Any
-}
-
-pub struct Identify {
-	token string
-	properties IdentifyProperties = IdentifyProperties{}
-	intents Intent
-}
-
-struct IdentifyProperties {
-	os string = os.user_os()
-	browser string = 'val'
-	device string = 'val'
-}
-
-struct IdentifyPacket {
-	op int
-	d Identify
-}
-
-enum Op {
+pub enum Op {
 	dispatch
 	heartbeat
 	identify
