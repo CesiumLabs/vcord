@@ -70,7 +70,7 @@ pub fn decode_packet(s string) ?GatewayPacket {
 
 pub fn (p IdentifyPacket) encode() string {
     return json.encode(SendIdentifyPacket {
-        op: u8(Op.identify),
+        op: u8(byte(Op.identify)),
         d:  p
     })
 }
