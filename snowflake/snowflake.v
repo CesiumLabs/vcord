@@ -2,33 +2,29 @@ module snowflake
 
 import time
 
-pub const (
-	discord_epoch = u64(1420070400000)
-)
-pub struct Snowflake {
-pub:
-	id                  u64
-	increment           u64
-	internal_process_id u64
-	internal_worker_id  u64
-}
-pub fn new_snowflake(id u64) Snowflake {
-	return Snowflake{
-		id: id
-		increment: id & 0xFFF
-		internal_process_id: (id & 0x1F000) >> 12
-		internal_worker_id: (id & 0x3E0000) >> 17
-	}
-}
-pub fn (s Snowflake) i64() i64 {
-	return i64(s.id)
-}
-pub fn (s Snowflake) str() string {
-	return s.id.str()
-}
-pub fn (s Snowflake) time() time.Time {
-	return time.unix(int(((s.id >> 22) + snowflake.discord_epoch) / 1000))
-}
-pub fn (s Snowflake) is_zero() bool {
-	return s.id == 0
+//  parses last pin timestamp to human readable time
+pub fn parse_timestamp(s string) time.Time {
+	mut start := s.index('T') or { 0 }
+	start++
+	end := s.index('+') or { 1 }
+	symd := s[0..start]
+	ymd :=  symd.split('-')
+	year := ymd[0]
+	month := ymd[1]
+	day := ymd[2]
+	shms := s[start..end]
+	hms := shms.split(':')
+	hour := hms[0]
+	minute := hms[1]
+	second := hms[2]
+
+	res := time.new_time(time.Time{
+		year: ymd[0].int()
+		month: ymd[1].int()
+		day: ymd[2].int()
+		hour: hour.int()
+		minute: minute.int()
+		second: second.int()
+	})
+	return res
 }
