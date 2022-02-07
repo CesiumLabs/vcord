@@ -16,7 +16,7 @@ fn main() {
         exit(1)
     }
     
-    c.on_ready(on_ready)
+    c.on('ready', on_ready)
 
     c.login() ?
 }
