@@ -1,5 +1,3 @@
-// this eventbus is a fork of terisback/discord.v/eventbus
-
 module eb
 
 pub type EventHandlerFn = fn (client voidptr, event voidptr)

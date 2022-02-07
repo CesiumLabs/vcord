@@ -59,12 +59,17 @@ pub struct Ready {
 pub mut:
 	v                int
 	user             User
-	private_channels []Channel
 	guilds           []UnavailableGuild
 	session_id       string
 	shard            [2]int
+	application      ApplicationStruct
 }
 
+pub struct ApplicationStruct {
+pub mut:
+	id   string
+	flags int
+}
 pub struct UnavailableGuild {
 pub mut:
 	id          string
@@ -80,6 +85,8 @@ pub mut:
 	bot           bool
 	system        bool
 	mfa_enabled   bool
+	banner        string
+	accent_color   int
 	locale        string
 	verified      bool
 	email         string
@@ -91,9 +98,10 @@ pub mut:
 pub type UserFlag = int
 
 pub enum PremiumType {
-	@none
+	none_type
 	nitro_classic
 	nitro
+	
 }
 
 pub struct Channel {
@@ -116,6 +124,15 @@ pub mut:
 	application_id        string
 	parent_id             string
 	last_pin_timestamp    time.Time
+	rtc_region             string
+	video_quality_mode     int
+	message_count          int
+	member_count           int
+    thread_metadata	   ThreadMetadata
+	member                ThreadMember
+default_auto_archive_duration  int
+  permissions                 string
+
 }
 
 enum ChannelType {
@@ -145,4 +162,20 @@ pub struct Avatar {
 	user_id string
 pub:
 	hash string
+}
+
+pub struct ThreadMetadata {
+	archived bool
+	auto_archive_duration int
+	archive_timestamp   int
+	locked           bool
+	invitable        bool
+	create_timestamp  int
+}
+
+pub struct ThreadMember {
+	id  string
+	flags  int
+	user_id string
+	join_timestamp int
 }
