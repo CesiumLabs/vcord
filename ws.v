@@ -12,6 +12,11 @@ fn (mut c Client) on_dispatch(packet &GatewayPacket) {
            data.from_json(packet_d)
            c.events.publish('on_$event', c, data)
        }
+       'message_create' {
+           mut data := Message{}
+              data.from_json(packet_d)
+              c.events.publish('on_$event', c, data)
+       }
        else {}
    }
 }
