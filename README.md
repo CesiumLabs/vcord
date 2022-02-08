@@ -8,21 +8,16 @@
   </h1>
   
   ```v
-import valkyria as val
+import valkyria
 
 
 fn main() {
-    mut c := val.new_client("BOT_TOKEN") or {
-        exit(1)
+    mut bot := valkyria.Bot{
+        token: "asdasjdfsdfsdhfudf",
+        intents: valkyria.all_intents
     }
     
-    c.on('ready', on_ready)
-
-    c.login() ?
-}
-
- fn on_ready(mut c val.Client, r &val.Ready) {
-    println("Ready!")
+    valkyria.run<valkyria.Bot>(mut &bot) ?
 }
 ```
 
