@@ -2,6 +2,7 @@ module valkyria
 
 import net.websocket
 import time
+import eb
 
 struct SharedHeartbeatData {
 mut:
@@ -20,10 +21,28 @@ mut:
     hb_last       i64
 pub mut:
     latency       u32
+    events        eb.EventBus
 }
 
-pub fn run<T>(mut bot &T) ? {
+pub struct Config {
+pub mut: 
+    token         string   [required]
+    intents       Intent   [required]
+}
+
+pub fn new(mut conf &Config) ?Bot {
+    mut bot := Bot{
+        token: conf.token,
+        intents: conf.intents,
+        ws: voidptr(0),
+        events: eb.new()
+    }
     create_ws(mut bot) ?
+
+    return bot
+}
+
+pub fn (mut bot Bot) login() ? {
     bot.ws.connect() ?
     bot.ws.listen() ?
 }
