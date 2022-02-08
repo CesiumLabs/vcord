@@ -2,8 +2,6 @@ module valkyria
 
 pub type Intent = u16
 
-pub const default_gateway = "wss://gateway.discord.gg/?v=9&encoding=json"
-
 pub const (
     guilds = Intent(1 << 0)
     guild_members = Intent(1 << 1)
@@ -20,6 +18,8 @@ pub const (
     direct_messages = Intent(1 << 12)
     direct_message_reactions = Intent(1 << 13)
     direct_message_typing = Intent(1 << 14)
+    
+    all_intents = Intent(0x7fff)
 )
 
 pub enum Op {

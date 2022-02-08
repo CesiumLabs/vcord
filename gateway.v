@@ -1,57 +1,107 @@
 module valkyria
 
 import net.websocket
-import eb
-import x.json2 as json
+import json
+import os { user_os }
+import time
 
-pub fn create_connection(url string, token string) ?&Client {
-    mut ws := websocket.new_client(url) or {
-        return error("failed to create websocket client")
+const default_gateway = "wss://gateway.discord.gg/?v=9&encoding=json"
+
+struct GatewayPacket {
+    op   byte      [required]
+    d    string    [raw]
+    s    u32       [required]
+    t    string
+}
+
+struct HelloPacket {
+    heartbeat_interval u32 [required]
+}
+
+struct Identify {
+    token         string              [required]
+    properties    IdentifyProperties  [required]
+    intents       Intent              [required]
+}
+
+struct IdentifyProperties {
+    os      string [json: '\$os']
+    browser string [json: '\$browser']
+    device  string [json: '\$device']
+}
+
+fn gateway_respond(mut ws &websocket.Client, op byte, data string) ? {
+    ws.write_string('{"op":$op,"d":$data}') ?
+}
+
+pub fn create_ws(mut bot &Bot) ? {
+    bot.ws = websocket.new_client(default_gateway) ?
+    bot.ws.on_message_ref(ws_on_message, bot)
+    bot.ws.on_close_ref(ws_on_close, bot)
+}
+
+fn ws_on_close(mut ws websocket.Client, reason int, message string, mut bot &Bot) ? {
+    lock bot.hb {
+        if bot.hb.is_open {
+            bot.hb.is_open = false
+            bot.hb_thread.wait() ?
+        }
     }
+}
 
-
-    mut c := &Client {
-        token: token,
-        ws: ws,
-        intents: 0,
-        events: eb.new()
+fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot &Bot) ? {
+    if msg.opcode != .text_frame {
+        return
     }
-
-    c.ws.on_open_ref(ws_on_open, c)
-    c.ws.on_message_ref(ws_on_message, c)
-    c.ws.on_close_ref(ws_on_close, c)
-    c.ws.on_error_ref(ws_on_error, c)
-
-    return c
-}
-
-fn ws_on_open(mut ws websocket.Client, mut c &Client) ? {
-    println("Sucessfully connected to the gateway")
-}
-
-fn ws_on_error(mut ws websocket.Client, error string, mut c &Client) ? {
-    println("Error: " + error)
-}
-
-fn ws_on_close(mut ws websocket.Client, code int, reason string, mut c &Client) ? {
-    println('Disconnected from the gateway reason: $reason & code: $code')
-}
-
-fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut c &Client) ? {
-    match msg.opcode {
-        .text_frame {
-           packet := json.decode<GatewayPacket>(string(msg.payload)) ?
-            c.seq = packet.s
-            
-            match Op(packet.op) {
-                .dispatch { c.on_dispatch(&packet) }
-                .hello { println("$packet.op") c.on_hello(&packet) }
-                else {
-                    println("$packet.op")
+    
+    payload_string := msg.payload.bytestr()
+    packet := json.decode(GatewayPacket, payload_string) ?
+    
+    if packet.s != 0 {
+        bot.seq = packet.s
+    }
+    
+    match Op(packet.op) {
+        .dispatch {
+            event_func_name := 'on_${packet.t.to_lower()}'
+        
+            $for field in Bot.methods {
+                $if field.args[0].typ is string {
+                    if field.name == event_func_name {
+                        bot.$method(packet.d)
+                    }
                 }
+            }
+        }
+       
+        .hello {
+            hello := json.decode(HelloPacket, packet.d) ?
+            
+            identify_packet := Identify {
+                token: bot.token,
+                properties: IdentifyProperties {
+                    os:      user_os(),
+                    browser: 'valkyria',
+                    device:  'valkyria'
+                },
+                intents: bot.intents
+            }
+            
+            gateway_respond(mut &ws, 2, json.encode(identify_packet)) ?
+            
+            lock bot.hb {
+                bot.hb.is_open = true
+            }
+            
+            bot.hb_thread = go bot.hb_proc(hello.heartbeat_interval * time.millisecond)
+        }
+        
+        .heartbeat_ack {
+            if bot.hb_last != 0 {
+                bot.latency = u32(time.now().unix - bot.hb_last)
             }
         }
         
         else {}
-    } 
+    }
 }
