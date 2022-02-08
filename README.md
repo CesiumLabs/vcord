@@ -12,12 +12,18 @@ import valkyria
 
 
 fn main() {
-    mut bot := valkyria.Bot{
-        token: "asdasjdfsdfsdhfudf",
-        intents: valkyria.all_intents
-    }
-    
-    valkyria.run<valkyria.Bot>(mut &bot) ?
+  mut conf := valkyria.Config{
+      token: "BOT_TOKEN",
+      intents: valkyria.all_intents
+  }
+ mut bot := valkyria.new(mut &conf) ?
+  bot.on("ready", on_ready)
+
+  bot.login() ?
+}
+
+fn on_ready(mut bot &valkyria.Bot, mut event &valkyria.Ready) {
+  println("Ready")
 }
 ```
 
