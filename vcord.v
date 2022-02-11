@@ -58,13 +58,6 @@ pub fn (mut bot Bot) login() ? {
 	bot.ws.listen() ?
 }
 
-pub struct MessagePayload {
-pub mut:
-	content string
-	embeds  []MessageEmbed
-	tts     bool
-}
-
 fn (mut this Bot) hb_proc(heartbeat_interval time.Duration) ? {
 	for {
 		println('$heartbeat_interval')

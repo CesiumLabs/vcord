@@ -249,3 +249,10 @@ pub mut:
 	team_id          string
 	membership_state int
 }
+
+pub struct MessagePayload {
+pub mut:
+	content string
+	embeds  []MessageEmbed
+	tts     bool
+}
