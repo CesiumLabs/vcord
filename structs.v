@@ -5,48 +5,56 @@ import x.json2 as json
 
 pub struct Ready {
 pub mut:
-        v           int
-        session_id  string
-        shard       []int
-        application Application
-        user        User
-        guilds      []UnavailableGuild
+	v           int
+	session_id  string
+	shard       []int
+	application Application
+	user        User
+	guilds      []UnavailableGuild
+}
+
+pub struct Raw {
+pub mut:
+	op byte
+	d  string
+	s  u32
+	t  string
 }
 
 pub struct Message {
 pub mut:
-        id                      string
-        channel_id              string
-        content                 string
-        guild_id                string
-        author                  User
-        embeds                  []MessageEmbed
-        timestamp               time.Time
-        edited_timestamp        time.Time
-        pinned                  bool
-        message_type            int
-        webhook_id              string
-        tts                     bool
-        mention_everyone        bool
-        nonce                   int
-        flags                   int
+	id               string
+	channel_id       string
+	content          string
+	guild_id         string
+	author           User
+	embeds           []MessageEmbed
+	timestamp        time.Time
+	edited_timestamp time.Time
+	pinned           bool
+	message_type     int
+	webhook_id       string
+	tts              bool
+	mention_everyone bool
+	nonce            int
+	flags            int
 }
 
 pub struct MessageEmbed {
 pub mut:
-        title                   string
-        description             string
-        url                     string
-        provider                MessageEmbedProvider
-        footer                  MessageEmbedFooter
-        fields                  []MessageEmbedField
-        author                  MessageEmbedAuthor
-        embed_type              string
-        timestamp               time.Time
-        color                   int
-        image                   MessageEmbedImage
-        thumbnail               MessageEmbedThumbnail
-        video                   MessageEmbedVideo
+	title       string
+	description string
+	url         string
+	provider    MessageEmbedProvider
+	footer      MessageEmbedFooter
+	fields      []MessageEmbedField
+	author      MessageEmbedAuthor
+	embed_type  string
+	timestamp   time.Time
+	color       int
+	image       MessageEmbedImage
+	thumbnail   MessageEmbedThumbnail
+	video       MessageEmbedVideo
 }
 
 pub fn (embed MessageEmbed) to_json() json.Any {
@@ -72,77 +80,77 @@ pub fn (embeds []MessageEmbed) to_json() json.Any {
 
 pub struct MessageEmbedProvider {
 pub mut:
-        name            string
-        url             string
+	name string
+	url  string
 }
 
 pub struct MessageEmbedImage {
 pub mut:
-        url                string
-        proxy_url          string
-        height             int
-        width              int
+	url       string
+	proxy_url string
+	height    int
+	width     int
 }
 
 pub fn (image MessageEmbedImage) to_json() json.Any {
 	mut data := map[string]json.Any{}
 	data['url'] = image.url
-        data['proxy_url'] = image.proxy_url
+	data['proxy_url'] = image.proxy_url
 	data['height'] = image.height
 	data['width'] = image.width
-        
+
 	return data
 }
 
 pub struct MessageEmbedThumbnail {
 pub mut:
-        url                string
-        proxy_url          string
-        height             int
-        width              int
+	url       string
+	proxy_url string
+	height    int
+	width     int
 }
 
 pub fn (thumbnail MessageEmbedThumbnail) to_json() json.Any {
 	mut data := map[string]json.Any{}
 	data['url'] = thumbnail.url
-        data['proxy_url'] = thumbnail.proxy_url
+	data['proxy_url'] = thumbnail.proxy_url
 	data['height'] = thumbnail.height
 	data['width'] = thumbnail.width
-        
+
 	return data
 }
 
 pub struct MessageEmbedVideo {
 pub mut:
-        url                string
-        proxy_url          string
-        height             int
-        width              int
+	url       string
+	proxy_url string
+	height    int
+	width     int
 }
 
 pub struct MessageEmbedAuthor {
 pub mut:
-        name                    string
-        url                     string
-        icon_url                string
-        proxy_icon_url          string
+	name           string
+	url            string
+	icon_url       string
+	proxy_icon_url string
 }
 
 pub fn (author MessageEmbedAuthor) to_json() json.Any {
 	mut data := map[string]json.Any{}
 	data['name'] = author.name
-    data['url'] = author.url
+	data['url'] = author.url
 	data['icon_url'] = author.icon_url
 	data['proxy_icon_url'] = author.proxy_icon_url
-        
+
 	return data
 }
 
 pub struct MessageEmbedFooter {
 pub mut:
-        text                    string
-        icon_url                string
-        proxy_icon_url          string
+	text           string
+	icon_url       string
+	proxy_icon_url string
 }
 
 pub fn (footer MessageEmbedFooter) to_json() json.Any {
@@ -156,9 +164,9 @@ pub fn (footer MessageEmbedFooter) to_json() json.Any {
 
 pub struct MessageEmbedField {
 pub mut:
-        name            string
-        value           string
-        inline          bool
+	name   string
+	value  string
+	inline bool
 }
 
 pub fn (field MessageEmbedField) to_json() json.Any {
@@ -179,65 +187,65 @@ pub fn (fields []MessageEmbedField) to_json() json.Any {
 
 pub struct UnavailableGuild {
 pub mut:
-        id          string
-        unavailable bool
+	id          string
+	unavailable bool
 }
 
 pub struct Application {
 pub mut:
-        id                     string
-        name                   string
-        owner                  User
-        icon                   string
-        description            string
-        rpc_origins            []string
-        bot_public             bool
-        bot_require_code_grant bool
-        terms_of_service_url   string
-        privacy_policy_url     string
-        summary                string
-        verify_key             string
-        team                   Team
-        guild_id               string
-        primary_sku_id         string
-        slug                   string
-        cover_image            string
-        flags                  int
+	id                     string
+	name                   string
+	owner                  User
+	icon                   string
+	description            string
+	rpc_origins            []string
+	bot_public             bool
+	bot_require_code_grant bool
+	terms_of_service_url   string
+	privacy_policy_url     string
+	summary                string
+	verify_key             string
+	team                   Team
+	guild_id               string
+	primary_sku_id         string
+	slug                   string
+	cover_image            string
+	flags                  int
 }
 
 pub struct User {
 pub mut:
-        id            string
-        username      string
-        discriminator string
-        avatar        string
-        bot           bool
-        system        bool
-        mfa_enabled   bool
-        banner        string
-        accent_color  int
-        locale        string
-        verified      bool
-        email         string
-        flags         int
-        premium_type  int
-        public_flags  int
-        premium_since int
+	id            string
+	username      string
+	discriminator string
+	avatar        string
+	bot           bool
+	system        bool
+	mfa_enabled   bool
+	banner        string
+	accent_color  int
+	locale        string
+	verified      bool
+	email         string
+	flags         int
+	premium_type  int
+	public_flags  int
+	premium_since int
 }
 
 pub struct Team {
 pub mut:
-        icon          string
-        id            string
-        members       []TeamMember
-        name          string
-        owner_user_id string
+	icon          string
+	id            string
+	members       []TeamMember
+	name          string
+	owner_user_id string
 }
 
 pub struct TeamMember {
 pub mut:
-        user             User
-        permissions      []string
-        team_id          string
-        membership_state int
+	user             User
+	permissions      []string
+	team_id          string
+	membership_state int
 }
