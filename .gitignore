@@ -6,3 +6,4 @@ api
 *.so
 *.dylib
 *.dll
+main.v
