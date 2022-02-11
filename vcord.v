@@ -1,10 +1,8 @@
 module vcord
 
 import net.websocket
-import net.http
 import time
 import eb
-import x.json2 as json
 import rest
 
 struct SharedHeartbeatData {
