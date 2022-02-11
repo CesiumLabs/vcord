@@ -38,11 +38,11 @@ pub mut:
 
 pub fn new(mut conf Config) ?Bot {
 	mut bot := Bot{
-		token: conf.token
-		intents: conf.intents
-		ws: voidptr(0)
-		events: eb.new()
-		http_endpoint: 'https://discord.com/api/v9'
+		token: conf.token,
+		intents: conf.intents,
+		ws: voidptr(0),
+		events: eb.new(),
+		http_endpoint: 'https://discord.com/api/v9',
 		user_agent: 'DiscordBot (https://github.com/CesiumLabs/valkyria, v0.1.0)'
 	}
 	create_ws(mut bot) ?
@@ -74,8 +74,8 @@ pub fn (mut bot Bot) create_message(channel_id string, data MessagePayload) ? {
 		url: '$bot.http_endpoint/channels/$channel_id/messages'
 		method: .post
 		header: http.new_header_from_map({
-			.authorization: 'Bot $bot.token'
-			.content_type:  'application/json'
+			.authorization: 'Bot $bot.token',
+			.content_type:  'application/json',
 			.user_agent:    bot.user_agent
 		})
 		data: payload.str()

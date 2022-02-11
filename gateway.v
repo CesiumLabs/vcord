@@ -34,13 +34,13 @@ fn gateway_respond(mut ws websocket.Client, op byte, data string) ? {
 	ws.write_string('{"op":$op,"d":$data}') ?
 }
 
-pub fn create_ws(mut bot Bot) ? {
-	bot.ws = websocket.new_client(.default_gateway) ?
+pub fn create_ws(mut bot &Bot) ? {
+	bot.ws = websocket.new_client(default_gateway) ?
 	bot.ws.on_message_ref(ws_on_message, bot)
 	bot.ws.on_close_ref(ws_on_close, bot)
 }
 
-fn ws_on_close(mut ws websocket.Client, reason int, message string, mut bot Bot) ? {
+fn ws_on_close(mut ws websocket.Client, reason int, message string, mut bot &Bot) ? {
 	lock bot.hb {
 		if bot.hb.is_open {
 			bot.hb.is_open = false
@@ -49,7 +49,7 @@ fn ws_on_close(mut ws websocket.Client, reason int, message string, mut bot Bot)
 	}
 }
 
-fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot Bot) ? {
+fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot &Bot) ? {
 	if msg.opcode != .text_frame {
 		return
 	}
