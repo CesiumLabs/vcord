@@ -1,4 +1,4 @@
-module valkyria
+module vcord
 
 import time
 import x.json2 as json

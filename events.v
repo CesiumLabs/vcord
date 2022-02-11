@@ -1,4 +1,4 @@
-module valkyria
+module vcord
 
 import eb
 import json

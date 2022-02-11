@@ -1,33 +1,33 @@
 <p align="center">
-  	<img src="https://media.discordapp.net/attachments/911964535060070453/939835510329839656/Valkyria.png?width=500&height=200">
+  	<img src="https://cdn.discordapp.com/attachments/855366345666854993/941699353284845578/Untitled_design.png">
 </p>
 </br>
  
 # Example
   
 ```v
-import valkyria
+import vcord
 
 fn main() {
-	mut conf := valkyria.Config{
+	mut conf := vcord.Config{
 		token: "BOT_TOKEN",
-		intents: valkyria.all_intents
+		intents: vcord.all_intents
 	}
-	mut bot := valkyria.new(mut &conf) ?
+	mut bot := vcord.new(mut &conf) ?
 	bot.on("ready", on_ready)
 	bot.on("message_create", on_message)
 	bot.login() ?
 }
-fn on_ready(mut bot &valkyria.Bot, mut event &valkyria.Ready) {
+fn on_ready(mut bot &vcord.Bot, mut event &vcord.Ready) {
   	println("Ready")
 }
 
-fn on_message(mut bot &valkyria.Bot, mut message &valkyria.Message){
+fn on_message(mut bot &vcord.Bot, mut message &vcord.Message){
     if message.content == '!ping' {
-        bot.create_message(message.channel_id, valkyria.MessagePayload{
+        bot.create_message(message.channel_id, vcord.MessagePayload{
             content: 'Pong!',
             embeds: [
-                valkyria.MessageEmbed{
+                vcord.MessageEmbed{
                     title: 'Hello World',
                     color: 0x7289da,
                     description: 'This is a test'

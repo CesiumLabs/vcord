@@ -1,4 +1,4 @@
-module valkyria
+module vcord
 
 pub type Intent = u16
 

@@ -1,4 +1,4 @@
-module valkyria
+module vcord
 
 import net.websocket
 import net.http
