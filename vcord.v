@@ -5,6 +5,7 @@ import net.http
 import time
 import eb
 import x.json2 as json
+import rest
 
 struct SharedHeartbeatData {
 mut:
@@ -27,6 +28,7 @@ mut:
 	user_agent string
 pub mut:
 	latency u32
+	rest    rest.Rest
 	events  eb.EventBus
 }
 
@@ -43,7 +45,8 @@ pub fn new(mut conf Config) ?Bot {
 		ws: voidptr(0),
 		events: eb.new(),
 		http_endpoint: 'https://discord.com/api/v9',
-		user_agent: 'DiscordBot (https://github.com/CesiumLabs/valkyria, v0.1.0)'
+		user_agent: 'DiscordBot (https://github.com/CesiumLabs/valkyria, v0.1.0)',
+		rest: rest.new(conf.token)
 	}
 	create_ws(mut bot) ?
 
@@ -53,33 +56,6 @@ pub fn new(mut conf Config) ?Bot {
 pub fn (mut bot Bot) login() ? {
 	bot.ws.connect() ?
 	bot.ws.listen() ?
-}
-
-pub struct MessagePayload {
-pub mut:
-	content string
-	embeds  []MessageEmbed
-	tts     bool
-}
-
-pub fn (mut bot Bot) create_message(channel_id string, data MessagePayload) ? {
-	mut payload := map[string]json.Any{}
-
-	payload['content'] = data.content
-	payload['tts'] = data.tts
-	payload['embeds'] = data.embeds.to_json()
-
-	// TODO: implement api router
-	http.fetch(http.FetchConfig{
-		url: '$bot.http_endpoint/channels/$channel_id/messages'
-		method: .post
-		header: http.new_header_from_map({
-			.authorization: 'Bot $bot.token',
-			.content_type:  'application/json',
-			.user_agent:    bot.user_agent
-		})
-		data: payload.str()
-	}) ?
 }
 
 fn (mut this Bot) hb_proc(heartbeat_interval time.Duration) ? {
