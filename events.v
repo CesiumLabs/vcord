@@ -7,6 +7,7 @@ fn handle_events(mut bot Bot, event_func_name string, packet string) ? {
 	match event_func_name {
 		'on_ready' {
 			mut data := json.decode(Ready, packet) ?
+			data.session_id = bot.sid
 			bot.events.publish(event_func_name, bot, data)
 		}
 		'on_message_create' {

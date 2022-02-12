@@ -18,6 +18,11 @@ struct HelloPacket {
 	heartbeat_interval u32 [required]
 }
 
+struct Resume {
+	token string  [required]
+	session_id string [required]
+	seq       int    [required]
+}
 struct Identify {
 	token      string             [required]
 	properties IdentifyProperties [required]
@@ -71,7 +76,15 @@ fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot &Bot) 
 		}
 		.hello {
 			hello := json.decode(HelloPacket, packet.d) ?
+           if bot.resuming == true {
+			   mut resume := Resume {
+				   token: bot.token,
+				   session_id: bot.sid,
+				   seq: bot.seq
+			   }
 
+			   gateway_respond(mut &ws, 6, json.encode(resume)) ?
+		   }
 			identify_packet := Identify{
 				token: bot.token
 				properties: IdentifyProperties{
@@ -94,6 +107,11 @@ fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot &Bot) 
 			if bot.hb_last != 0 {
 				bot.latency = u32(time.now().unix - bot.hb_last)
 			}
+		}
+
+		.reconnect {
+			bot.resuming = true
+			bot.ws.close(1000, 'Reconnect') ?
 		}
 		else {}
 	}
