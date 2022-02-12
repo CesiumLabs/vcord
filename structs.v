@@ -2,6 +2,7 @@ module vcord
 
 import time
 import x.json2 as json
+import snowflake
 
 pub struct Ready {
 pub mut:
@@ -38,6 +39,10 @@ pub mut:
 	mention_everyone bool
 	nonce            int
 	flags            int
+}
+
+pub fn (message Message) snowflake() snowflake.Snowflake {
+	return snowflake.deconstruct(message.id.u64())
 }
 
 pub struct MessageEmbed {
