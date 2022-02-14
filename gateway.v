@@ -80,7 +80,7 @@ fn ws_on_message(mut ws websocket.Client, msg &websocket.Message, mut bot &Bot) 
 			   mut resume := Resume {
 				   token: bot.token,
 				   session_id: bot.sid,
-				   seq: bot.seq
+				   seq: int(bot.seq)
 			   }
 
 			   gateway_respond(mut &ws, 6, json.encode(resume)) ?

@@ -28,7 +28,7 @@ pub fn (mut r Rest) post(url string, data string) ? {
 		data: data
 	}
 
-	http.fetch(config) ?
+	mut resp := http.fetch(config) ?
 }
 
 pub fn (mut r Rest) get(url string) ?http.Response {
