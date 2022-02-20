@@ -297,7 +297,7 @@ pub mut:
 pub struct MessagePayload {
 pub mut:
         content string
-        embeds  []MessageEmbed
+        embeds  []MessageEmbed = voidptr(0)
         tts     bool
 }
 
@@ -305,10 +305,12 @@ pub struct CreateChannelData {
 pub mut:
         name                string
         topic               string
-        bitrate             int
+        bitrate             int = 8000
         user_limit          int
         rate_limit_per_user int
         position            int
         parent_id           string
         nsfw                bool
 }
+
+pub type ChannelEditData = CreateChannelData

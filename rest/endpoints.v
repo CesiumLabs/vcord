@@ -22,3 +22,10 @@ pub fn endpoint_guild(api_url string, guild_id string) string {
 pub fn endpoint_guild_channels(api_url string, guild_id string) string {
 	return endpoint_guild(api_url, guild_id) + "/channels"
 }
+
+pub fn endpoint_channel_messages(api_url string, channel_id string) string {
+	return endpoint_channel(api_url, channel_id) + "/messages"
+}
+pub fn endpoint_edit_channel_message(api_url string, channel_id string, message_id string) string {
+	return endpoint_channel_messages(api_url, channel_id) + "/$message_id"
+}

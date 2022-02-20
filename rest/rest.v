@@ -16,7 +16,7 @@ pub fn new(token string) Rest {
   return rest
 }
 
-pub fn (mut r Rest) post(url string, data string) ? {
+pub fn (mut r Rest) post(url string, data string) ?http.Response {
     mut config := http.FetchConfig{
 		url: "$url",
 		method: .post,
@@ -29,6 +29,7 @@ pub fn (mut r Rest) post(url string, data string) ? {
 	}
 
 	mut resp := http.fetch(config) ?
+	return resp
 }
 
 pub fn (mut r Rest) get(url string) ?http.Response {
@@ -45,4 +46,34 @@ pub fn (mut r Rest) get(url string) ?http.Response {
 	mut resp := http.fetch(config) ?
 
 	return resp
+}
+
+pub fn (mut r Rest) patch(url string, data string) ?http.Response {
+	mut config := http.FetchConfig{
+		url: "$url",
+        method: .patch,
+		header: http.new_header_from_map({
+			.authorization: 'Bot $r.token',
+			.content_type:  'application/json',
+			.user_agent:    r.user_agent
+		})
+	}
+
+	mut resp := http.fetch(config) ?
+   println(resp) 
+   return resp
+}
+
+pub fn (mut r Rest) delete(url string) ? {
+	mut config := http.FetchConfig{
+		url: "$url",
+		method: .delete,
+		header: http.new_header_from_map({
+			.authorization: 'Bot $r.token',
+			.content_type:  'application/json',
+			.user_agent:    r.user_agent
+		})
+	}
+
+	http.fetch(config) ?
 }
